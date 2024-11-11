@@ -865,3 +865,57 @@ class ControllerREST(http.Controller):
         # This can be based on a sequence or any other method
         sequence = request.env['ir.sequence'].sudo().next_by_code('qcell_kyc.application') or '/'
         return sequence
+
+    @http.route('/api/kyc/get', methods=['HEAD', 'GET', 'OPTIONS'], type='http', auth='none', csrf=False,
+                cors="*")
+    @check_authorization
+    @check_permissions
+    def api_getkycapplications(self, *args, **kw):
+        try:
+            user = request.env.user
+            # Check if user has required permissions
+            allowed_groups = [
+                'qcell_kyc.group_qcell_kyc_creator',
+                'qcell_kyc.group_qcell_kyc_verifier',
+                'qcell_kyc.group_qcell_kyc_admin'
+            ]
+            if not any(user.has_group(group) for group in allowed_groups):
+                return api_response({"status": False, "intent": False, "description": "Access denied."}, status=403)
+
+            # Fetch KYC Applications created by the user
+            kyc_applications = []
+            kyc_records = request.env['qcell_kyc.application'].sudo().search([('create_uid', '=', user.id)])
+
+            # Debug log to check applications found
+            _logger.info("Found %s KYC applications for user %s", len(kyc_records), user.name)
+
+            for kyc in kyc_records:
+                kyc_applications.append({
+                    'id': kyc.id,
+                    'name': kyc.name,
+                    'state': kyc.state,
+                    'verification_notes': kyc.verification_notes,
+                })
+
+            return werkzeug.wrappers.Response(
+                status=200,
+                content_type='application/json; charset=utf-8',
+                headers=[('Cache-Control', 'no-store'), ('Pragma', 'no-cache')],
+                response=json.dumps({
+                    'kyc_applications': kyc_applications,
+                    'status': True,
+                })
+            )
+        except Exception as e:
+            _logger.error("Error during get_tokens: %s", str(e))
+            error_message_obj = request.env['byte.error.message']
+            error_message_obj.env.cr.rollback()
+            error_message_obj.sudo().create({
+                'name': str(e),
+                'exception': True,
+                'method': 'api_getkycapplications',
+                'model': 'get kyc app',
+                'meta': "Get KYC Application"
+            })
+            return api_response(
+                {"status": False, "intent": False, "description": "Could not fetch applications An error occurred"})
