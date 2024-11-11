@@ -1,34 +1,114 @@
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/17.0)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+# QCell KYC Odoo Module
 
-Odoo
-----
+## Overview
 
-Odoo is a suite of web based open source business apps.
+The **Telecom KYC** Odoo module is designed to streamline and manage Know Your Customer (KYC) processes for QCell, enabling agents to efficiently create, verify, and manage client information and documents for identity verification. This module supports document upload, customer information storage, and KYC application state management to ensure compliance with regulatory requirements.
 
-The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>,
-<a href="https://www.odoo.com/app/website">Website Builder</a>,
-<a href="https://www.odoo.com/app/ecommerce">eCommerce</a>,
-<a href="https://www.odoo.com/app/inventory">Warehouse Management</a>,
-<a href="https://www.odoo.com/app/project">Project Management</a>,
-<a href="https://www.odoo.com/app/accounting">Billing &amp; Accounting</a>,
-<a href="https://www.odoo.com/app/point-of-sale-shop">Point of Sale</a>,
-<a href="https://www.odoo.com/app/employees">Human Resources</a>,
-<a href="https://www.odoo.com/app/social-marketing">Marketing</a>,
-<a href="https://www.odoo.com/app/manufacturing">Manufacturing</a>,
-<a href="https://www.odoo.com/">...</a>
+## Features
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured <a href="https://www.odoo.com">Open Source ERP</a> when you install several Apps.
+- **KYC Application Creation**: Allows agents to create KYC applications on behalf of customers.
+- **Document Upload**: Supports uploading of ID documents, proof of address, and customer selfies.
+- **Application State Management**: Manages KYC application states (e.g., draft, submitted, verified, rejected).
+- **Permissions & Access Control**: Provides role-based access for creators, verifiers, and administrators.
+- **Integration with Mobile App**: Accessible via the QCell KYC mobile app (built with Expo), allowing agents to manage KYC applications on the go.
 
-Getting started with Odoo
--------------------------
+## Requirements
 
-For a standard installation please follow the <a href="https://www.odoo.com/documentation/17.0/administration/install/install.html">Setup instructions</a>
-from the documentation.
+- **Odoo 17**
+- **Expo (for the mobile app client)**
+- **Client App - https://github.com/fredybangs/kyc-client**
+- **Agent App - https://github.com/fredybangs/kyc-agent**
 
-To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/17.0/developer/howtos.html">the developer tutorials</a>
-# telecom-kyc
-# telecom-kyc
+## Installation
+
+1. **Clone the Module Repository**:
+   Clone or download the Telecom KYC module into your Odoo `addons` directory.
+
+2. **Activate the Module**:
+   - Go to **Apps** in your Odoo instance.
+   - Click on **Update Apps List**.
+   - Search for "QCell KYC" and click **Install**.
+
+3. **Dependencies**:
+   Ensure the following dependencies are installed:
+   - Required Odoo modules (Contacts, Documents, etc.)
+   - External libraries for the Expo app if applicable (e.g., `axios`, `redux`, `expo-image-picker`).
+
+## Usage
+
+### Key Entities
+
+- **KYC Applications**: Represent individual customer KYC records.
+- **Customers**: Stored in `res.partner` with additional fields for KYC applications.
+
+### How to Use
+
+1. **Creating a KYC Application**:
+   - Agents can create KYC applications directly in Odoo or through the mobile app.
+   - Each application includes fields like `ID Type`, `ID Number`, and URLs for document images.
+
+2. **Managing Application States**:
+   - KYC applications go through different states: **Draft**, **Submitted**, **Verified**, and **Rejected**.
+   - Users with appropriate permissions can change the state and add verification notes.
+
+3. **Accessing and Filtering KYC Applications**:
+   - The module provides a menu and tree view to view all KYC applications.
+   - The `res.partner` form is extended to display related KYC applications.
+
+### Mobile Application Integration
+
+- The mobile app built with Expo allows agents to:
+  - Create KYC applications
+  - Upload images for ID, proof of address, and selfies
+  - Manage application states and add notes
+
+## API Endpoints
+
+The Odoo module exposes the following endpoints for integration with the mobile app:
+
+- **Create KYC Application**: `POST /api/kyc/create`
+  - Body: JSON payload containing user and KYC application data.
+  - Headers: Access Token for authorization.
+  
+## Roles & Permissions
+
+1. **Creator**: Can create and submit KYC applications.
+2. **Verifier**: Can verify and approve/reject applications.
+3. **Admin**: Full control over all application states and roles.
+
+## Module Structure
+
+- **Models**:
+  - `qcell_kyc.application`: Defines the KYC application structure.
+  - Inherits `res.partner` to link customers to KYC applications.
+
+- **Views**:
+  - Form and tree views for KYC applications.
+  - Integration of KYC information on the `res.partner` form.
+
+- **Security**:
+  - Access rights and record rules defined in `security/ir.model.access.csv` for role-based access.
+
+## Configuration
+
+- **Primary Color**: The primary brand color used in the application is `#F58F21`, ensuring brand consistency across the platform and mobile app.
+- **Image Upload**: Images are uploaded via an external API (e.g., ImgBB) from the mobile app and stored as URLs in the KYC application records.
+
+## Development Tools Used
+
+- **Backend**:
+  - Odoo 17
+  - Python
+- **Mobile Client**:
+  - Expo (React Native)
+  - Axios for API calls
+  - Redux for state management
+  - Expo Image Picker and ImgBB API for image handling
+
+---
+
+## Support
+
+For support and further documentation, contact The SpaceMan - https://thespaceman.tech.
+
+--- 
