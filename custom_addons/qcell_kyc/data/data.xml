@@ -1,0 +1,19 @@
+<!-- qcell_kyc/data/data.xml -->
+<odoo>
+    <record id="seq_qcell_kyc_application" model="ir.sequence">
+        <field name="name">KYC Application Sequence</field>
+        <field name="code">qcell_kyc.application</field>
+        <field name="prefix">KYC</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field> <!-- Defines the starting sequence number -->
+        <field name="number_increment">1</field>
+        <field name="use_date_range">False</field>
+    </record>
+
+    <record id="module_category_kyc" model="ir.module.category">
+        <field name="name">QCELL KYC</field>
+        <field name="description">Category for KYC related modules</field>
+        <field name="sequence">10</field>
+    </record>
+
+</odoo>

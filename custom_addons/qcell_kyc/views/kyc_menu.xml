@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <menuitem id="menu_qcell_kyc_root" name="QCell KYC" sequence="1"/>
+        <menuitem id="qcell_kyc_menu_applications" action="action_qcell_kyc_application" name="KYC Applications"
+                  parent="menu_qcell_kyc_root" sequence="1"/>
+        <!-- Menu Item for Customers with KYC Applications -->
+<!--        <menuitem id="menu_qcell_kyc_customers_with_applications"-->
+<!--                  name="Customers with KYC"-->
+<!--                  parent="menu_qcell_kyc_root"-->
+<!--                  action="action_res_partner_with_kyc"-->
+<!--                  sequence="2"/>-->
+    </data>
+</odoo>

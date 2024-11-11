@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for byte.error.message -->
+    <record id="byte_error_message_form" model="ir.ui.view">
+        <field name="name">byte.error.message.form</field>
+        <field name="model">byte.error.message</field>
+        <field name="arch" type="xml">
+            <form string="Error Message Details" create="false" edit="false">
+                <header>
+                    <!-- Button: Visible Only When State is 'pending' -->
+                    <button name="action_set_resolved"
+                            string="Mark as Resolved"
+                            type="object"
+                            class="oe_highlight"
+                            groups="base.group_system"
+                            invisible="state != 'pending'"/>
+
+                    <!-- Status Bar -->
+                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="pending,resolved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="create_date" readonly="1"/>
+                        <field name="exception" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="model" readonly="1"/>
+                        <field name="method" readonly="1"/>
+                        <field name="meta" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for byte.error.message -->
+    <record id="byte_error_message_tree" model="ir.ui.view">
+        <field name="name">byte.error.message.tree</field>
+        <field name="model">byte.error.message</field>
+        <field name="arch" type="xml">
+            <tree string="Error Logs" create="false" edit="false">
+                <field name="create_date"/>
+                <field name="exception"/>
+                <field name="name"/>
+                <field name="model"/>
+                <field name="method"/>
+                <field name="meta"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action Window for byte.error.message -->
+    <record id="action_error_message" model="ir.actions.act_window">
+        <field name="name">Error Logs</field>
+        <field name="res_model">byte.error.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="byte_error_message_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No error messages have been recorded.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="error_messages_root" parent="base.menu_custom" sequence="10" name="Error Messages"/>
+    <menuitem id="error_messages" parent="error_messages_root" name="Error Logs" action="action_error_message" sequence="1"/>
+</odoo>

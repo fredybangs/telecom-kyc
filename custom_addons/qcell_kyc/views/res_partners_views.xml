@@ -1,0 +1,62 @@
+<odoo>
+    <!-- Tree View for res.partner with KYC Applications -->
+    <record id="view_res_partner_tree_kyc" model="ir.ui.view">
+        <field name="name">res.partner.tree.kyc</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Customers with KYC Applications">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="kyc_application_count" string="KYC Applications"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for res.partner with KYC Applications -->
+    <record id="view_res_partner_form_kyc" model="ir.ui.view">
+        <field name="name">res.partner.form.kyc</field>
+        <field name="model">res.partner</field>
+        <!-- Update the inherit_id with the correct external ID -->
+        <field name="inherit_id" ref="contacts.res_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="KYC Applications">
+                    <field name="kyc_application_ids">
+                        <tree string="KYC Applications">
+                            <field name="name"/>
+                            <field name="id_type"/>
+                            <field name="id_number"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search View Inheritance to Add Filter -->
+<!--    <record id="view_res_partner_filter_kyc" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.search.kyc</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        &lt;!&ndash; Update the inherit_id with the correct external ID &ndash;&gt;-->
+<!--        <field name="inherit_id" ref="contacts.res_partner_view_search"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//filter[@string='Group By']" position="before">-->
+<!--                <filter string="Has KYC Applications" name="has_kyc_applications" domain="[('kyc_application_ids', '!=', False)]"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!-- Action Window for Customers with KYC Applications -->
+    <record id="action_res_partner_with_kyc" model="ir.actions.act_window">
+        <field name="name">Customers with KYC Applications</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('qcell_kyc.view_res_partner_tree_kyc')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('qcell_kyc.view_res_partner_form_kyc')})
+        ]"/>
+        <field name="domain">[('kyc_application_ids', '!=', False)]</field>
+    </record>
+</odoo>

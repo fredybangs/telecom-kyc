@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_qcell_kyc_application_admin,access_qcell_kyc_application_admin,model_qcell_kyc_application,group_qcell_kyc_admin,1,1,1,1
+access_qcell_kyc_application_verifier,access_qcell_kyc_application_verifier,model_qcell_kyc_application,group_qcell_kyc_verifier,1,0,0,0
+access_qcell_kyc_application_creator,access_qcell_kyc_application_creator,model_qcell_kyc_application,group_qcell_kyc_creator,1,1,1,0
+access_res_partner_extension,access_res_partner_extension,base.model_res_partner,group_qcell_kyc_admin,1,1,1,1
+email_activation,email_activation,model_email_activation,base.group_user,1,1,1,1

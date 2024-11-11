@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_email_activation_form" model="ir.ui.view">
+        <field name="name">email.activation.form</field>
+        <field name="model">email.activation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Send Reset Email"
+                            name="send_password_reset_email"
+                            type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                <group col="2">
+                    <group>
+                        <field name="user_id" />
+                        <field name="token" />
+                        <field name="date" />
+                        <field name="expiry_date" />
+                        <field name="active" />
+                    </group>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_email_activation_tree" model="ir.ui.view">
+        <field name="name">email.activation.tree</field>
+        <field name="model">email.activation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="user_id" />
+                <field name="token" />
+                <field name="date" />
+                <field name="expiry_date" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_email_activation" model="ir.actions.act_window">
+        <field name="name">Emails Activation/Reset</field>
+        <field name="res_model">email.activation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
