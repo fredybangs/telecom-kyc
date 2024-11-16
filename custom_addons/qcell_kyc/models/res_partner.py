@@ -19,6 +19,9 @@ class ResPartner(models.Model):
         string='KYC Applications',
         compute='_compute_kyc_application_count'
     )
+    partner_gid = fields.Integer(string="Partner GID")
+    additional_info = fields.Text(string="Additional Information")
+
 
     @api.depends('kyc_application_ids')
     def _compute_kyc_application_count(self):

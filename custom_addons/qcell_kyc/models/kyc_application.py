@@ -31,9 +31,20 @@ class KYCApplication(models.Model):
     _description = 'KYC Application'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Application Reference', required=True, copy=False, readonly=True, default='New',
-                       tracking=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', required=True, tracking=True)
+    name = fields.Char(
+        string='Application Reference',
+        required=True,
+        copy=False,
+        readonly=True,
+        default='New',
+        tracking=True
+    )
+    partner_id = fields.Many2one(
+        'res.partner',
+        string='Customer',
+        required=True,
+        tracking=True
+    )
     id_type = fields.Selection([
         ('passport', 'Passport'),
         ('driver_license', 'Driver License'),
@@ -41,9 +52,10 @@ class KYCApplication(models.Model):
         ('national_id', 'National ID'),
     ], string='ID Type', required=True, tracking=True)
     id_number = fields.Char(string='ID Number', required=True, tracking=True)
+    phone_number = fields.Char(string='Phone Number', required=True, tracking=True)
     current_address = fields.Char(string='Current Address')
     permanent_address = fields.Char(string='Permanent Address')
-    id_document = fields.Image(string='ID Document', )
+    id_document = fields.Image(string='ID Document')
     id_document_url = fields.Char(string="ID Image Url", readonly=True)
     proof_of_address = fields.Image(string='Proof of Address')
     proof_of_address_url = fields.Char(string="Proof of Address URL", readonly=True)
@@ -60,7 +72,8 @@ class KYCApplication(models.Model):
     verification_notes = fields.Text(string='Verification Notes')
 
     _sql_constraints = [
-        ('name_unique', "CHECK(name = 'New' OR name IS NOT NULL)", 'The Application Reference must be unique.')
+        ('name_unique', "CHECK(name = 'New' OR name IS NOT NULL)", 'The Application Reference must be unique.'),
+        ('phone_number_unique', 'unique(phone_number)', 'The phone number must be unique.'),
     ]
 
     @api.model
@@ -71,15 +84,15 @@ class KYCApplication(models.Model):
         vals['document_upload_date'] = fields.Datetime.now()
 
         # Upload images to ImgBB and store URLs
-        if 'id_document' in vals:
+        if 'id_document' in vals and vals['id_document']:
             id_document_base64 = vals['id_document']
             vals['id_document_url'] = upload_image_to_imagebb(id_document_base64)
 
-        if 'proof_of_address' in vals:
+        if 'proof_of_address' in vals and vals['proof_of_address']:
             proof_of_address_base64 = vals['proof_of_address']
             vals['proof_of_address_url'] = upload_image_to_imagebb(proof_of_address_base64)
 
-        if 'selfie' in vals:
+        if 'selfie' in vals and vals['selfie']:
             selfie_base64 = vals['selfie']
             vals['selfie_url'] = upload_image_to_imagebb(selfie_base64)
 
@@ -96,6 +109,27 @@ class KYCApplication(models.Model):
         for record in self:
             if not re.match(r'^[A-Z0-9]+$', record.id_number):
                 raise UserError("ID Number must contain only letters and numbers.")
+
+    @api.constrains('phone_number')
+    def _check_phone_number_format_and_uniqueness(self):
+        for record in self:
+            # Define the regex pattern
+            pattern = r'^232(31|32|34)\d{6}$'
+            if not re.match(pattern, record.phone_number):
+                raise ValidationError(
+                    "Phone Number must start with '232' followed by '31', '32', or '34', and then 6 digits.\n"
+                    "Valid examples:\n"
+                    "- 23232123456\n"
+                    "- 23231123456\n"
+                    "- 23234123456"
+                )
+            # Uniqueness is already enforced by SQL constraint, but double-check if needed
+            existing = self.search([
+                ('phone_number', '=', record.phone_number),
+                ('id', '!=', record.id)
+            ], limit=1)
+            if existing:
+                raise ValidationError("The phone number must be unique. This number is already in use.")
 
     def action_generate_sequence(self):
         """Generate and assign a sequence to the 'name' field if it is 'New'."""
