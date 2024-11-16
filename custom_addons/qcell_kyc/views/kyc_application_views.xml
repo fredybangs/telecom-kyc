@@ -53,6 +53,7 @@
                                 <group>
                                     <field name="name" readonly="1"/>
                                     <field name="partner_id"/>
+                                    <field name="phone_number" />
                                     <field name="state" readonly="1"/>
                                     <field name="document_upload_date" string="Document Upload Date" readonly="1"/>
                                 </group>

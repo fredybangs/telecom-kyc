@@ -35,6 +35,7 @@
         </field>
     </record>
 
+
     <!-- Search View Inheritance to Add Filter -->
 <!--    <record id="view_res_partner_filter_kyc" model="ir.ui.view">-->
 <!--        <field name="name">res.partner.search.kyc</field>-->
